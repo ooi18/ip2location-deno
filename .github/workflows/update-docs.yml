@@ -1,0 +1,30 @@
+name: Update Documentation
+
+on:
+  push:
+    tags:
+      - "*.*.*" # Trigger on new version tags
+
+jobs:
+  update-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: Run Update Script
+        run: deno run --allow-net --allow-read --allow-write scripts/update-docs.ts
+
+      - name: Commit Changes
+        run: |
+          git config user.name "ooi18"
+          git config user.email "ooi18@protonmail.com"
+          git add .
+          git commit -m "Update documentation for new version"
+          git push
